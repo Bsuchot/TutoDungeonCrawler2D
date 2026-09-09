@@ -20,7 +20,7 @@ public class PlayerAttack : MonoBehaviour
     {
         Vector2 attackDirection = spriteRenderer.flipX ? Vector2.left : Vector2.right;
 
-        Collider2D[] hitCollider = Physics2D.OverlapCircle(transform.position, attackRange);
+        Collider2D[] hitCollider = Physics2D.OverlapCircleAll(transform.position, attackRange);
 
         foreach (Collider2D collider in hitCollider)
         {
@@ -30,7 +30,7 @@ public class PlayerAttack : MonoBehaviour
 
                 if(Vector2.Dot(attackDirection, directionEnemy) > 0)
                 {
-                    Debug.log("L'attaque a touché l'ennemi");
+                    Debug.Log("L'attaque a touché l'ennemi");
                 }
             }
         }
