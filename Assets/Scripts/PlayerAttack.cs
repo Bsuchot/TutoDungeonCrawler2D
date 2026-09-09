@@ -8,6 +8,8 @@ public class PlayerAttack : MonoBehaviour
 
     public SpriteRenderer spriteRenderer;
 
+    public Animator animator;
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
@@ -18,6 +20,8 @@ public class PlayerAttack : MonoBehaviour
 
     void PerformAttack()
     {
+        animator.SetTrigger("Attack");
+        
         Vector2 attackDirection = spriteRenderer.flipX ? Vector2.left : Vector2.right;
 
         Collider2D[] hitCollider = Physics2D.OverlapCircleAll(transform.position, attackRange);
