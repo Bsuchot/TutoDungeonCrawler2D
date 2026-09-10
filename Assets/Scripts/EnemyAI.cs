@@ -29,6 +29,14 @@ public class EnemyAI : MonoBehaviour
     // Composant Rigidbody2D utilisé pour le mouvement physique de l'ennemi
     public Rigidbody2D rb;
 
+    public Animator animator;
+
+    public SpriteRenderer spriteRenderer;
+
+    public float attackCooldown = 2f; 
+
+    private float currentCooldown = 0f;
+
     // Méthode appelée au début de l'exécution
     void Start()
     {
@@ -54,6 +62,25 @@ public class EnemyAI : MonoBehaviour
             path = p;
             currWp = 0;
         }
+    }
+
+    void Update()
+    {
+        animator.SetFloat("Speed", rb.linearVelocity.magnitude);
+
+        // Vérifie si le sprite doit être inversé en fonction de la direction du mouvement
+        if (rb.linearVelocity.x != 0)
+        {
+            spriteRenderer.flipX = rb.linearVelocity.x < 0;
+        }
+
+        currentCooldown -= Time.deltaTime;
+
+        if(currentCooldown < 0)
+        {
+            currentCooldown = 0;
+        }
+        
     }
 
     // Méthode appelée à chaque frame fixe pour gérer les mouvements physiques
@@ -91,6 +118,35 @@ public class EnemyAI : MonoBehaviour
             {
                 currWp++;
             }
+        } else
+        {
+            if(currentCooldown <= 0)
+            {
+                Attack();
+
+            }
         }
+    }
+    void Attack()
+    {
+        animator.SetBool("isAttacking", true);
+        animator.SetTrigger("Attack");
+        currentCooldown = attackCooldown;
+    }
+
+    void EndOfAttack()
+    {
+        animator.SetBool("isAttacking", false);
+
+        if (Vector2.Distance(transform.position, target.position) <= attackRange)
+        {
+            Debug.Log("L'attaque de l'ennemi a touché le joueur");
+        }
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 }
